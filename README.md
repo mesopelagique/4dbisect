@@ -71,7 +71,7 @@ In script you must return `0` if all is ok, and any other code if failed.
 
 #### example 
 
-An example of script could be found in `test.sh`
+An example of script could be found in [`test.sh`](test.sh)
 
 If you use it, maybe change path of your database inside, by defaulf it use `$HOME/Bisect`
 
