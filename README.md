@@ -108,8 +108,5 @@ If you want to go further with sources and find the exact commit, you must use `
 [code-url]: http://swift.org/
 [release-shield]: https://img.shields.io/github/v/release/mesopelagique/4dbisect
 [release-url]: https://github.com/mesopelagique/ClassStoreDiagram/4dbisect/latest
-![Swift](https://github.com/mesopelagique/4dbisect/workflows/Swift/badge.svg)
-
-
 [check-shield]: https://github.com/mesopelagique/4dbisect/workflows/Swift/badge.svg
 [check-url]: https://github.com/mesopelagique/4dbisect/actions?query=workflow%3ASwift
