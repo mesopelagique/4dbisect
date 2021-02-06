@@ -13,7 +13,11 @@ swift build -c release
 
 Result in `.build/release/4dbisect`
 
-You could install it to `/usr/local/bin` for instance (using `sudo cp`) to use it everywhere
+You could install it to `/usr/local/bin` for instance to use it everywhere (or set .build/release/4dbisect in your $PATH)
+
+```bash
+sudo cp .build/release/4dbisect /usr/local/bin
+````
 
 ## how to use
 
