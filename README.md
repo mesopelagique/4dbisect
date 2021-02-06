@@ -100,6 +100,8 @@ Folder(fk resources folder).file("error").setText("")
 
 If you want to go further with sources and find the exact commit, you must use `git bisect` but you need to compile 4D at each checkout
 
+More information about [bisection](https://en.wikipedia.org/wiki/Bisection_(software_engineering))
+
 ---
 
 [<img src="https://mesopelagique.github.io/quatred.png" alt="mesopelagique"/>](https://mesopelagique.github.io/)
