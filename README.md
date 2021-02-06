@@ -31,7 +31,23 @@ OPTIONS:
 ```
 
 ```bash
-4dbisect --min 245555 --max 289999 --path "/Volumes/ENGINEERING/Products/Compiled/Build/Main" ./test.sh
+4dbisect --min 225555 --max 289999 --path "/Volumes/ENGINEERING/Products/Compiled/Build/Main" ./test.sh
+parameters: 225555 ➡ 289999
+available: 238629 ➡ 261398
+test: 238629 ✅
+test: 261398 ❌
+available no skip: 238629 ➡ 261398
+test: 251291 ❌
+test: 245065 ❌
+test: 241271 ✅
+test: 243242 ❌
+test: 242181 🌀
+test: 242129 ❌
+test: 241673 ✅
+test: 241902 ✅
+test: 241983 ❌
+test: 241919 🌀
+result: 241902 ➡ 241983
 ```
 
 ### The script
