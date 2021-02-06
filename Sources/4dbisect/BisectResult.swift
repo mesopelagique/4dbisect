@@ -1,10 +1,12 @@
 enum BisectResult {
-    case good, bad //, skip TODO support skip for test not possible
+    case good, bad, skip
     
     var icon: String {
         switch self {
+        case .skip:
+            return "🌀"
         case .bad:
-            return "🔴"
+            return "❌"
         case .good:
             return "✅"
         }

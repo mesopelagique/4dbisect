@@ -16,6 +16,10 @@ protocol VersionProvider {
 
     /// return the next version to test according to min and max
     func next(min: Version, max: Version) -> Version?
+
+    func next(_ value: Version) -> Version?
+    func previous(_ value: Version) -> Version?
+    func remove(_ value: Version)
 }
 
 // mock to test
@@ -36,10 +40,19 @@ struct AllMeanVersionProvider: VersionProvider {
         }
         return (min + max) / 2 //mean
     }
+
+    func next(_ value: Version) -> Version? {
+        return value + 1
+    }
+    func previous(_ value: Version) -> Version? {
+        return value - 1
+    }
+    func remove(_ value: Version) {
+    }
 }
 
 class ListProvider: VersionProvider {
-    let versions: [Version]
+    var versions: [Version]
     init(versions: [Version]) {
         self.versions = versions.sorted()
     }
@@ -87,7 +100,32 @@ class ListProvider: VersionProvider {
         }
         return interval[midPos]
     }
-
+    
+    func next(_ value: Version) -> Version? {
+        guard let pos = versions.firstIndex(of: value) else {
+            return nil
+        }
+        let nextPos = pos.advanced(by: 1)
+        if nextPos < versions.count {
+            return versions[nextPos]
+        }
+        return nil
+    }
+    func previous(_ value: Version) -> Version? {
+        guard let pos = versions.firstIndex(of: value) else {
+            return nil
+        }
+        let nextPos = pos.advanced(by: -1)
+        if nextPos >= 0 {
+            return versions[nextPos]
+        }
+        return nil
+    }
+    func remove(_ value: Version) {
+        if let pos = versions.firstIndex(of: value) {
+            versions.remove(at: pos)
+        }
+    }
 }
 
 class FileProvider: ListProvider {

@@ -27,38 +27,65 @@ struct Bisect: ParsableCommand {
     @Argument(help: "Path of base to test.")
     var script: String
  
-    var versionProvider: VersionProvider  {
+    lazy var versionProvider: VersionProvider =  {
         if let path = self.path {
             return FileProvider(path: path)
         }
         // return ListProvider(versions: [50, 78, 466, 799, 800])
         return AllMeanVersionProvider.instance
-    }
+    }()
 
     mutating func run() throws {
         let min = self.min ?? Version.zero
         let max = self.max ?? Version.max
         print("parameters: \(min) ➡ \(max)")
 
-        guard let realMin = versionProvider.get(min, .equalsOrUpper) else {
-            print("No available version for min \(min)")
+        guard var realMin = versionProvider.get(min, .equalsOrUpper) else {
+            print("‼️ No available version for min \(min)")
             return
         }
-        guard let realMax = versionProvider.get(max, .equalsOrLower) else {
-            print("No available version for max \(max)")
+        guard var realMax = versionProvider.get(max, .equalsOrLower) else {
+            print("‼️ No available version for max \(max)")
             return
         }
         print("available: \(realMin) ➡ \(realMax)")
         
-        let minValue = test(realMin)
+        var minValue = test(realMin)
         print(minValue.icon)
-        let maxValue = test(realMax)
+        while(minValue == .skip && realMin < realMax) {
+            if let next = versionProvider.next(realMin) {
+                realMin = next
+                minValue = test(realMin)
+                print(minValue.icon)
+            } else {
+                realMin = .max
+            }
+        }
+
+        var maxValue = test(realMax)
         print(maxValue.icon)
-        let result = bisect(min: (realMin, minValue), max: (realMax, maxValue))
-        print("result: \(result.0) ➡ \(result.1)")
+        while(maxValue == .skip && realMin < realMax) {
+            if let previous = versionProvider.previous(realMin) {
+                realMax = previous
+                maxValue = test(realMax)
+                print(maxValue.icon)
+            } else {
+                realMax = -1
+            }
+        }
+
+        if realMin == realMax {
+            print("‼️ No version found. Last tested \(realMax)")
+        } else if minValue == maxValue {
+            print("‼️ Nothing change between \(realMin) ➡ \(realMax)")
+        } else {
+            print("available no skip: \(realMin) ➡ \(realMax)")
+            let result = bisect(min: (realMin, minValue), max: (realMax, maxValue))
+            print("result: \(result.0) ➡ \(result.1)")
+        }
     }
 
-    func bisect(min: (Version, BisectResult), max: (Version, BisectResult)) -> (Version, Version) {
+    mutating func bisect(min: (Version, BisectResult), max: (Version, BisectResult)) -> (Version, Version) {
         switch (min.1, max.1) {
         case (.good, .good):
             return (min.0, max.0)
@@ -86,8 +113,11 @@ struct Bisect: ParsableCommand {
             return bisect(min: min, max: (toTest, result))
         case (.bad, .good, .bad):
             return bisect(min: (toTest, result), max: max)
+        case (_, _, .skip):
+            versionProvider.remove(toTest)
+            return bisect(min: min, max: max)
         default:
-            assertionFailure("Not filtered error")
+            assertionFailure("Not filtered error \(min.1), \(max.1), \(result)")
             return (Version.min, Version.min)
         }
     }
@@ -100,8 +130,8 @@ struct Bisect: ParsableCommand {
         switch code {
         case 0:
             return .good
-        /*case 128:
-            return .skip*/
+        case 125:
+            return .skip
         default:
             return .bad
         }
