@@ -1,5 +1,7 @@
 # 4dbisect
 
+[![language][code-shield]][code-url]
+
 test versions of 4d to find where a bug occurs
 
 
@@ -95,3 +97,12 @@ Folder(fk resources folder).file("error").setText("")
 ## Tips
 
 If you want to go further with sources and find the exact commit, you must use `git bisect` but you need to compile 4D at each checkout
+
+---
+
+[<img src="https://mesopelagique.github.io/quatred.png" alt="mesopelagique"/>](https://mesopelagique.github.io/)
+
+[code-shield]: https://img.shields.io/static/v1?label=language&message=swift&color=orange
+[code-url]: http://swift.org/
+[release-shield]: https://img.shields.io/github/v/release/mesopelagique/4dbisect
+[release-url]: https://github.com/mesopelagique/ClassStoreDiagram/4dbisect/latest
