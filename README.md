@@ -60,9 +60,9 @@ result: 241902 ➡ 241983
 
 ### The script
 
-The script will receive the version number and the file path, the one you provide with `--path`
+The script will receive as arguments the version number and the file path, the one you provide with `--path` option.
 
-In script you must return 0 if all is ok, and any other code if failed
+In script you must return `0` if all is ok, and any other code if failed.
 
 > Use 125 (like git bisect) to set that the version could not be tested, for instance the 4D zip is not available.
 
@@ -80,11 +80,11 @@ test
 QUIT 4D()
 ```
 
-with `test` your method that could use `ASSERT` in case of bug
+with `test` your method that could use `ASSERT` in case of failure.
 
 Then your base must create an `error` file in `Resources` folder on error when your test failed. 
 
-In `onError` (see `onStart`)
+In `onError` (see `onStart` to choose the name)
 
 ```4d
 Folder(fk resources folder).file("error").setText("")
