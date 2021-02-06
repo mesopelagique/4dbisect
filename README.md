@@ -3,18 +3,19 @@
 [![language][code-shield]][code-url]
 [![check][check-shield]][check-url]
 
-test versions of 4d to find where a bug occurs
+Test versions of 4d app to find when a bug occurs.
 
+It use dichotomie, so avoid flaky test.
 
 ## how to build
 
-its a swift command line, so if not installed, install xcode or swift runtime
+Its a swift command line, so if not installed, install Xcode or swift runtime.
 
 ```bash
 swift build -c release
 ```
 
-Result in `.build/release/4dbisect`
+Result of build is in path `.build/release/4dbisect`
 
 You could install it to `/usr/local/bin` for instance to use it everywhere (or set .build/release/4dbisect in your $PATH)
 
@@ -73,12 +74,12 @@ In script you must return `0` if all is ok, and any other code if failed.
 
 An example of script could be found in [`test.sh`](test.sh)
 
-If you use it, maybe change path of your database inside, by defaulf it use `$HOME/Bisect`
+If you use it, consider changing the path of your database inside the script (by default it use `$HOME/Bisect` path).
 
 You must launch your test and quit 4d after that, in database method `onStart` you could put
 
 ```4d
-ON ERR CALL("onError")
+ON ERR CALL("onError") # handle any error ie. ASSERT
 test
 QUIT 4D()
 ```
