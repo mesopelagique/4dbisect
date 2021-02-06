@@ -11,11 +11,15 @@ It use dichotomie, so avoid flaky test.
 
 Its a swift command line, so if not installed, install Xcode or swift runtime.
 
+Then in project path run
+
 ```bash
 swift build -c release
 ```
 
-Result of build is in path `.build/release/4dbisect`
+Result of build will be in `.build/release/4dbisect`
+
+### install 
 
 You could install it to `/usr/local/bin` for instance to use it everywhere (or set .build/release/4dbisect in your $PATH)
 
