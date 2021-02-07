@@ -18,6 +18,7 @@ if [[ -f "$path" ]]; then
         # failed if a file has been created in resources (for install an error handler and create the file if an assert occurs)
         # if 4D return error code, it will be better, just return its code with $? 
         if [[ -f "$myBase/Resources/error" ]]; then
+            rm -Rf "$myBase/Resources/error"
             rm -Rf $unzipPath
             exit 1
         else
