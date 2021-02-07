@@ -3,7 +3,8 @@
 version=$1
 root=$2
 
-myBase=$HOME/Bisect # customize it
+baseName="Bisect"
+myBase=$HOME/$baseName # customize it
 
 path=$root/$version/release/INTL/mac_INTL_64/4D_INTL_x86_64.zip
 
@@ -13,7 +14,7 @@ if [[ -f "$path" ]]; then
     unzip -q '$path' $unzipPath
 
     if [[ -f "$unzipPath/4D/4D.app/Contents/MacOS/4D" ]]; then
-        $unzipPath/4D/4D.app/Contents/MacOS/4D --headless --dataless -s "$myBase/Project/builder.4DProject" # run onStart of this project, must auto QUIT
+        $unzipPath/4D/4D.app/Contents/MacOS/4D --headless --dataless -s "$myBase/Project/$baseName.4DProject" # run onStart of this project, must auto QUIT
 
         # failed if a file has been created in resources (for install an error handler and create the file if an assert occurs)
         # if 4D return error code, it will be better, just return its code with $? 
