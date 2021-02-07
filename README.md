@@ -83,9 +83,11 @@ If you use it, consider changing the path of your database inside the script (by
 You must launch your test and quit 4d after that, in database method `onStart` you could put
 
 ```4d
-ON ERR CALL("onError") # handle any error ie. ASSERT
+ON ERR CALL("onError") // handle any error ie. ASSERT
 test
-QUIT 4D()
+If (Not(Shift down)) // so you could open your db without the auto quit
+  QUIT 4D()
+End if
 ```
 
 with `test` your method that could use `ASSERT` in case of failure.
