@@ -80,6 +80,8 @@ An example of script could be found in [`test.sh`](test.sh)
 
 If you use it, consider changing the path of your database inside the script (by default it use `$HOME/Bisect` path).
 
+A demo database could be found in [`Bisect.zip`](Bisect.zip).
+
 You must launch your test and quit 4d after that, in database method `onStart` you could put
 
 ```4d
