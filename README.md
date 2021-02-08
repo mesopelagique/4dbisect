@@ -58,7 +58,7 @@ OPTIONS:
 ```
 
 ```bash
-4dbisect --min 225555 --max 289999 --path "/Volumes/ENGINEERING/Products/Compiled/Build/Main" ./test.sh
+4dbisect --min 225555 --max 289999 --path "/Your/Path/To/Build/Main" ./test.sh
 parameters: 225555 ➡ 289999
 available: 238629 ➡ 261398
 test: 238629 ✅
@@ -80,6 +80,8 @@ result: 241902 ➡ 241983
 - ✅ good  
 - ❌ bad 
 - 🌀 skip
+
+The path must contains no trailing `/` and inside a folder numeroted by version
 
 ### The script
 
