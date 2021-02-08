@@ -20,7 +20,7 @@ swift build -c release
 
 Result of build will be in `.build/release/4dbisect`
 
-### Put in PATH 
+### Put in PATH
 
 You could install it to `/usr/local/bin` for instance to use it everywhere (or set .build/release/4dbisect in your $PATH)
 
@@ -35,7 +35,7 @@ For security reason its better to build yourself but you could download the late
 or launch this command
 
 ```bash
-sudo curl -sL https://mesopelagique.github.io/4dbisect/.github/4dbisect.sh | bash
+sudo curl -sL https://mesopelagique.github.io/4dbisect/install.sh | bash
 ```
 
 This will install `4dbisect` to `/usr/local/bin`
@@ -87,7 +87,7 @@ In script you must return `0` if all is ok, and any other code if failed.
 
 > Use 125 (like git bisect) to set that the version could not be tested, for instance the 4D zip is not available.
 
-#### example 
+#### example
 
 An example of script could be found in [`test.sh`](test.sh)
 
