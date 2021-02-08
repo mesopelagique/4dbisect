@@ -32,7 +32,7 @@ else
   tar -zxf $archive -C $TMP/
 fi
 
-binary=$TMP/.build/release/kaluza 
+binary=$TMP/.build/release/4dbisect 
 
 dst="/usr/local/bin"
 echo "Install into $dst/4dbisect"
