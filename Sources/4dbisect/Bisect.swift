@@ -17,16 +17,16 @@ struct Bisect: ParsableCommand {
 
     @Option(name: [.customLong("min"), .customShort("m")], help: "The minimum version.")
     var min: Version?
-    
+
     @Option(name: [.customLong("max"), .customShort("M")], help: "The maximum version.")
     var max: Version?
-    
+
     @Option(help: "Path that contains versionned folder")
     var path: String?
-    
+
     @Argument(help: "Path of base to test.")
     var script: String
- 
+
     lazy var versionProvider: VersionProvider =  {
         if let path = self.path {
             return FileProvider(path: path)
@@ -49,10 +49,10 @@ struct Bisect: ParsableCommand {
             return
         }
         print("available: \(realMin) ➡ \(realMax)")
-        
+
         var minValue = test(realMin)
         print(minValue.icon)
-        while(minValue == .skip && realMin < realMax) {
+        while minValue == .skip && realMin < realMax {
             if let next = versionProvider.next(realMin) {
                 realMin = next
                 minValue = test(realMin)
@@ -64,7 +64,7 @@ struct Bisect: ParsableCommand {
 
         var maxValue = test(realMax)
         print(maxValue.icon)
-        while(maxValue == .skip && realMin < realMax) {
+        while maxValue == .skip && realMin < realMax {
             if let previous = versionProvider.previous(realMin) {
                 realMax = previous
                 maxValue = test(realMax)
@@ -98,7 +98,7 @@ struct Bisect: ParsableCommand {
         guard let toTest = versionProvider.next(min: min.0, max: max.0) else {
             return (min.0, max.0) // no more things to test
         }
-   
+
         // launch test
         let result = test(toTest)
         print(result.icon)
@@ -121,20 +121,13 @@ struct Bisect: ParsableCommand {
             return (Version.min, Version.min)
         }
     }
-    
+
     /// Do the test for specific version
     func test(_ value: Version) -> BisectResult {
         print("test: \(value) ", terminator: "")
-        
+
         let code = shell(self.script, "\(value)", "\(path ?? "")")
-        switch code {
-        case 0:
-            return .good
-        case 125:
-            return .skip
-        default:
-            return .bad
-        }
+        return BisectResult(code: Intcode)
     }
 
 }

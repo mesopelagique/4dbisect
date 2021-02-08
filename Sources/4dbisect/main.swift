@@ -4,5 +4,5 @@
 //
 //  Created by emarchand on 06/02/2021.
 //
- 
+
 Bisect.main()

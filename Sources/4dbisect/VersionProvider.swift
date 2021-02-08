@@ -24,13 +24,13 @@ protocol VersionProvider {
 
 // mock to test
 struct AllMeanVersionProvider: VersionProvider {
-    
+
     static let instance = AllMeanVersionProvider()
 
     func get(_ value: Version, _ comp: BisectComparator) -> Version? {
         return value // all
     }
-    
+
     func next(min: Version, max: Version) -> Version? {
         if min == max {
             return nil
@@ -38,7 +38,7 @@ struct AllMeanVersionProvider: VersionProvider {
         if min.advanced(by: 1) == max {
             return nil
         }
-        return (min + max) / 2 //mean
+        return (min + max) / 2 // mean
     }
 
     func next(_ value: Version) -> Version? {
@@ -77,7 +77,7 @@ class ListProvider: VersionProvider {
         }
         return nil
     }
-    
+
     func next(min: Version, max: Version) -> Version? {
         guard let minPos = versions.firstIndex(of: min),
               let maxPos = versions.firstIndex(of: max) else {
@@ -100,7 +100,7 @@ class ListProvider: VersionProvider {
         }
         return interval[midPos]
     }
-    
+
     func next(_ value: Version) -> Version? {
         guard let pos = versions.firstIndex(of: value) else {
             return nil
@@ -147,4 +147,3 @@ class FileProvider: ListProvider {
         return exists && isDirectory.boolValue
     }
 }
-
