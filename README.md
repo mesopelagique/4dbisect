@@ -22,11 +22,13 @@ Result of build will be in `.build/release/4dbisect`
 
 ### Put in PATH
 
-You could install it to `/usr/local/bin` for instance to use it everywhere (or set .build/release/4dbisect in your $PATH)
+You could install it to `/usr/local/bin` for instance to use it everywhere
 
 ```bash
 sudo cp .build/release/4dbisect /usr/local/bin
 ````
+
+or add `YOUR_CURRENT_PATH/.build/release/` in your $PATH
 
 ## How to install the released version
 
