@@ -11,7 +11,7 @@ path=$root/$version/release/INTL/mac_INTL_64/4D_INTL_x86_64.zip
 unzipPath=$(mktemp -d)
 
 if [[ -f "$path" ]]; then
-    unzip -q "$path" $unzipPath
+    unzip -q "$path" -d $unzipPath
 
     if [[ -f "$unzipPath/4D/4D.app/Contents/MacOS/4D" ]]; then
         $unzipPath/4D/4D.app/Contents/MacOS/4D --headless --dataless -s "$myBase/Project/$baseName.4DProject" # run onStart of this project, must auto QUIT
@@ -27,6 +27,7 @@ if [[ -f "$path" ]]; then
             exit 0
         fi
     else
+        rm -Rf $unzipPath
         >&2 echo "No 4D command in zip $path"
         exit 125 # skip
     fi
