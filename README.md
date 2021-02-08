@@ -2,12 +2,13 @@
 
 [![language][code-shield]][code-url]
 [![check][check-shield]][check-url]
+[![release][release-shield]][release-url]
 
 Test versions of 4d app to find when a bug occurs.
 
 It use dichotomie, so avoid flaky test.
 
-## how to build
+## How to build yourself
 
 Its a swift command line, so if not installed, install Xcode or swift runtime.
 
@@ -19,7 +20,7 @@ swift build -c release
 
 Result of build will be in `.build/release/4dbisect`
 
-### install 
+### Put in PATH 
 
 You could install it to `/usr/local/bin` for instance to use it everywhere (or set .build/release/4dbisect in your $PATH)
 
@@ -27,7 +28,19 @@ You could install it to `/usr/local/bin` for instance to use it everywhere (or s
 sudo cp .build/release/4dbisect /usr/local/bin
 ````
 
-## how to use
+## How to install the released version
+
+For security reason its better to build yourself but you could download the latest release [![release][release-shield]][release-url]
+
+or launch this command
+
+```bash
+sudo curl -sL https://mesopelagique.github.io/4dbisect/.github/4dbisect.sh | bash
+```
+
+This will install `4dbisect` to `/usr/local/bin`
+
+## How to use
 
 ```bash
 USAGE: 4dbisect [--min <min>] [--max <max>] [--path <path>] <script>
@@ -120,3 +133,5 @@ More information about [bisection](https://en.wikipedia.org/wiki/Bisection_(soft
 [release-url]: https://github.com/mesopelagique/ClassStoreDiagram/4dbisect/latest
 [check-shield]: https://github.com/mesopelagique/4dbisect/workflows/Swift/badge.svg
 [check-url]: https://github.com/mesopelagique/4dbisect/actions?query=workflow%3ASwift
+[release-shield]: https://img.shields.io/github/v/release/mesopelagique/4dbisect
+[release-url]: https://github.com/mesopelagique/4dbisect/releases/latest/download/4dbisect.zip
