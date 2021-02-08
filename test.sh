@@ -11,7 +11,7 @@ path=$root/$version/release/INTL/mac_INTL_64/4D_INTL_x86_64.zip
 unzipPath=$(mktemp -d)
 
 if [[ -f "$path" ]]; then
-    unzip -q '$path' $unzipPath
+    unzip -q "$path" $unzipPath
 
     if [[ -f "$unzipPath/4D/4D.app/Contents/MacOS/4D" ]]; then
         $unzipPath/4D/4D.app/Contents/MacOS/4D --headless --dataless -s "$myBase/Project/$baseName.4DProject" # run onStart of this project, must auto QUIT
