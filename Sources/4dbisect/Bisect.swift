@@ -127,7 +127,7 @@ struct Bisect: ParsableCommand {
         print("test: \(value) ", terminator: "")
 
         let code = shell(self.script, "\(value)", "\(path ?? "")")
-        return BisectResult(code: Intcode)
+        return BisectResult(code: code)
     }
 
 }

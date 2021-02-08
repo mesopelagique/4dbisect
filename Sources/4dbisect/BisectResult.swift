@@ -12,7 +12,7 @@ enum BisectResult {
         }
     }
 
-    init(code: Int) {
+    init(code: Int32) {
         switch code {
         case 0:
             self = .good
