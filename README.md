@@ -130,7 +130,7 @@ In your form add two buttons
 - OK: in method just `QUIT 4D`
 - KO: in method `Folder(fk resources folder).file("error").setText("")` and `QUIT 4D`
 
-An example of script could be found in `examples/testUIWith4DCache.sh`
+An example of script could be found in [`examples/testUIWith4DCache.sh`](examples/testUIWith4DCache.sh), [script that could be downloaded into your database path](examples/README.md)
 
 ## Tips
 
