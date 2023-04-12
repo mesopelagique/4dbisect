@@ -91,7 +91,9 @@ In script you must return `0` if all is ok, and any other code if failed.
 
 > Use 125 (like git bisect) to set that the version could not be tested, for instance the 4D zip is not available.
 
-#### example
+#### examples
+
+##### headless test
 
 An example of script could be found in [`test.sh`](test.sh)
 
@@ -99,7 +101,7 @@ If you use it, consider changing the path of your database inside the script (by
 
 A demo database could be found in [`Bisect.zip`](Bisect.zip).
 
-You must launch your test and quit 4d after that, in database method `onStart` you could put
+You must launch your test and quit 4d after that, in database method `onStart` you could could put that code to quit on error
 
 ```4d
 ON ERR CALL("onError") // handle any error ie. ASSERT
@@ -120,6 +122,15 @@ Folder(fk resources folder).file("error").setText("")
 ```
 
 > If 4D and `QUIT 4D` allow to set the process exit code this file creation will not be necessary
+
+##### UI test
+
+In your form add two buttons
+
+- OK: in method just `QUIT 4D`
+- KO: in method `Folder(fk resources folder).file("error").setText("")` and `QUIT 4D`
+
+An example of script could be found in `examples/testUIWith4DCache.sh`
 
 ## Tips
 
