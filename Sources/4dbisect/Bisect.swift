@@ -28,17 +28,17 @@ struct Bisect: ParsableCommand {
     var product: String?
 
     @Argument(help: "Path of script to launch the test.\nThe script well receive \n\t- the version to test\n\tthe path of all products\nSo <path>/<version> will contain the product.\n\nThe script must return:\n\t✅ 0 if ok \n\t🌀 125 if no product found to skip\n\t🛑 128 to stop all process\n\t❌ any other code if the test failed")
-    var script: String?
+    var script: [String]
     
     // action to do
     private var test: Test? {
-        if let script = script {
-            return .executeScript(script: script)
+        if let scriptPath = script.first, !scriptPath.hasPrefix("-") {
+            return .executeScript(script: scriptPath, args: Array(script.dropFirst()))
         } else {
             let projectURL = URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true).appendingPathComponent("Project")
             if let files = try? FileManager.default.contentsOfDirectory(at: projectURL, includingPropertiesForKeys: nil, options: .skipsSubdirectoryDescendants).filter({ $0.pathExtension == "4DProject" }) {
                 if let base = files.first {
-                    return .openBase(url: base)
+                    return .openBase(url: base, args: script)
                 }
             }
         }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-func shell(_ launchPath: String, _ args: String...) -> Int32 {
+func shell(_ launchPath: String, _ args: [String]) -> Int32 {
     let task = Process()
     task.launchPath = launchPath
     task.arguments = args

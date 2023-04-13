@@ -8,16 +8,16 @@
 import Foundation
 
 enum Test {
-    case executeScript(script: String)
-    case openBase(url: URL)
+    case executeScript(script: String, args: [String])
+    case openBase(url: URL, args: [String])
 
     func run(version: Version, path: String?) -> BisectResult {
         switch self {
-        case .executeScript(let script):
-            let code = shell(script, "\(version)", path ?? "")
+        case .executeScript(let script, let args):
+            let code = shell(script, ["\(version)", path ?? ""] + args)
             return BisectResult(code: code)
-        case .openBase(_):
-            print("‼️ Opening base without script is not implemented yet")
+        case .openBase(let url, let args):
+            print("‼️ Opening base without script is not implemented yet: \(url), \(args)")
             return .stop // not implemented yet
         }
     }
