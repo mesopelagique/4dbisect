@@ -61,6 +61,10 @@ struct Bisect: ParsableCommand {
                 realMin = .max
             }
         }
+        if minValue == .stop {
+            print("🛑 min \(realMin) request to stop")
+            Darwin.exit(128)
+        }
 
         var maxValue = test(realMax)
         print(maxValue.icon)
@@ -72,6 +76,10 @@ struct Bisect: ParsableCommand {
             } else {
                 realMax = -1
             }
+        }
+        if maxValue == .stop {
+            print("🛑 max \(realMax) request to stop")
+            Darwin.exit(128)
         }
 
         if realMin == realMax {

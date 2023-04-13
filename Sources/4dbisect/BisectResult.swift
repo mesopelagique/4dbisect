@@ -1,14 +1,16 @@
 enum BisectResult {
-    case good, bad, skip
+    case good, bad, skip, stop
 
     var icon: String {
         switch self {
-        case .skip:
-            return "🌀"
-        case .bad:
-            return "❌"
         case .good:
             return "✅"
+        case .bad:
+            return "❌"
+        case .skip:
+            return "🌀"
+        case .stop:
+            return "🛑"
         }
     }
 
@@ -18,6 +20,8 @@ enum BisectResult {
             self = .good
         case 125:
             self = .skip
+        case 128:
+            self = .stop
         default:
             self = .bad
         }
