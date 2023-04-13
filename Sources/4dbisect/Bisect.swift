@@ -28,21 +28,45 @@ struct Bisect: ParsableCommand {
     var product: String?
 
     @Argument(help: "Path of script to launch the test.\nThe script well receive \n\t- the version to test\n\tthe path of all products\nSo <path>/<version> will contain the product.\n\nThe script must return:\n\t✅ 0 if ok \n\t🌀 125 if no product found to skip\n\t🛑 128 to stop all process\n\t❌ any other code if the test failed")
-    var script: String
+    var script: String?
+    
+    // action to do
+    private var test: Test? {
+        if let script = script {
+            return .executeScript(script: script)
+        } else {
+            let projectURL = URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true).appendingPathComponent("Project")
+            if let files = try? FileManager.default.contentsOfDirectory(at: projectURL, includingPropertiesForKeys: nil, options: .skipsSubdirectoryDescendants).filter({ $0.pathExtension == "4DProject" }) {
+                if let base = files.first {
+                    return .openBase(url: base)
+                }
+            }
+        }
+        return nil
+    }
+    private var finalPath: String?
 
     lazy var versionProvider: VersionProvider =  {
         if let path = self.path {
+            self.finalPath = path
             return FileProvider(path: path)
         }
         if let product = product {
             if product == "main" {
                 print("‼️ You must use Main")
             }
+            self.finalPath  = "/Volumes/ENGINEERING/Products/Compiled/Build/\(product)"
             return FileProvider(path: "/Volumes/ENGINEERING/Products/Compiled/Build/\(product)")
         }
         // return ListProvider(versions: [50, 78, 466, 799, 800])
         return AllMeanVersionProvider.instance
     }()
+
+    mutating func validate() throws {
+        if self.test == nil {
+            throw ValidationError("You must provide a script as argument or be in 4d project folder")
+        }
+    }
 
     mutating func run() throws {
         let min = self.min ?? Version.zero
@@ -59,12 +83,17 @@ struct Bisect: ParsableCommand {
         }
         print("available: \(realMin) ➡ \(realMax)")
 
-        var minValue = test(realMin)
+        guard let test = self.test else {
+            print("‼️ No test to do")
+            Darwin.exit(1)
+        }
+   
+        var minValue = test.run(version: realMin, path: finalPath)
         print(minValue.icon)
         while minValue == .skip && realMin < realMax {
             if let next = versionProvider.next(realMin) {
                 realMin = next
-                minValue = test(realMin)
+                minValue = test.run(version: realMin, path: finalPath)
                 print(minValue.icon)
             } else {
                 realMin = .max
@@ -74,13 +103,12 @@ struct Bisect: ParsableCommand {
             print("🛑 min \(realMin) request to stop")
             Darwin.exit(128)
         }
-
-        var maxValue = test(realMax)
+        var maxValue = test.run(version: realMax, path: finalPath)
         print(maxValue.icon)
         while maxValue == .skip && realMin < realMax {
             if let previous = versionProvider.previous(realMin) {
                 realMax = previous
-                maxValue = test(realMax)
+                maxValue = test.run(version: realMax, path: finalPath)
                 print(maxValue.icon)
             } else {
                 realMax = -1
@@ -97,12 +125,12 @@ struct Bisect: ParsableCommand {
             print("‼️ Nothing change between \(realMin) ➡ \(realMax)")
         } else {
             print("available no skip: \(realMin) ➡ \(realMax)")
-            let result = bisect(min: (realMin, minValue), max: (realMax, maxValue))
+            let result = bisect(min: (realMin, minValue), max: (realMax, maxValue), test: test)
             print("result: \(result.0) ➡ \(result.1)")
         }
     }
 
-    mutating func bisect(min: (Version, BisectResult), max: (Version, BisectResult)) -> (Version, Version) {
+    mutating func bisect(min: (Version, BisectResult), max: (Version, BisectResult), test: Test) -> (Version, Version) {
         switch (min.1, max.1) {
         case (.good, .good):
             return (min.0, max.0)
@@ -117,34 +145,26 @@ struct Bisect: ParsableCommand {
         }
 
         // launch test
-        let result = test(toTest)
+        let result = test.run(version: toTest, path: finalPath)
         print(result.icon)
 
         // check result
         switch (min.1, max.1, result) {
         case (.good, .bad, .good):
-            return bisect(min: (toTest, result), max: max)
+            return bisect(min: (toTest, result), max: max, test: test)
         case (.good, .bad, .bad):
-            return bisect(min: min, max: (toTest, result))
+            return bisect(min: min, max: (toTest, result), test: test)
         case (.bad, .good, .good):
-            return bisect(min: min, max: (toTest, result))
+            return bisect(min: min, max: (toTest, result), test: test)
         case (.bad, .good, .bad):
-            return bisect(min: (toTest, result), max: max)
+            return bisect(min: (toTest, result), max: max, test: test)
         case (_, _, .skip):
             versionProvider.remove(toTest)
-            return bisect(min: min, max: max)
+            return bisect(min: min, max: max, test: test)
         default:
             assertionFailure("Not filtered error \(min.1), \(max.1), \(result)")
             return (Version.min, Version.min)
         }
     }
-
-    /// Do the test for specific version
-    func test(_ value: Version) -> BisectResult {
-        print("test: \(value) ", terminator: "")
-
-        let code = shell(self.script, "\(value)", "\(path ?? "")")
-        return BisectResult(code: code)
-    }
-
+ 
 }
