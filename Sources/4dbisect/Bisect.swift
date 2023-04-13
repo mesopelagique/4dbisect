@@ -21,8 +21,11 @@ struct Bisect: ParsableCommand {
     @Option(name: [.customLong("max"), .customShort("M")], help: "The maximum version.")
     var max: Version?
 
-    @Option(help: "Path that contains versionned folder")
+    @Option(help: "Full path that contains versionned folder")
     var path: String?
+
+    @Option(name: [.customLong("product")], help: "Compute path according to 4D binary version for srv4d (/Volumes/ENGINEERING/Products/Compiled/Build/<product>).")
+    var product: String?
 
     @Argument(help: "Path of base to test.")
     var script: String
@@ -30,6 +33,12 @@ struct Bisect: ParsableCommand {
     lazy var versionProvider: VersionProvider =  {
         if let path = self.path {
             return FileProvider(path: path)
+        }
+        if let product = product {
+            if product == "main" {
+                print("‼️ You must use Main")
+            }
+            return FileProvider(path: "/Volumes/ENGINEERING/Products/Compiled/Build/\(product)")
         }
         // return ListProvider(versions: [50, 78, 466, 799, 800])
         return AllMeanVersionProvider.instance
