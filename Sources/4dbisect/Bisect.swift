@@ -15,19 +15,19 @@ struct Bisect: ParsableCommand {
         abstract: "Find when it failed."
     )
 
-    @Option(name: [.customLong("min"), .customShort("m")], help: "The minimum version.")
+    @Option(name: [.customLong("min"), .customShort("m")], help: "The minimum version. (default: 0)")
     var min: Version?
 
-    @Option(name: [.customLong("max"), .customShort("M")], help: "The maximum version.")
+    @Option(name: [.customLong("max"), .customShort("M")], help: "The maximum version. (default: integer max)")
     var max: Version?
 
     @Option(help: "Full path that contains versionned folder")
     var path: String?
 
-    @Option(name: [.customLong("product")], help: "Compute path according to 4D binary version for srv4d (/Volumes/ENGINEERING/Products/Compiled/Build/<product>).")
+    @Option(name: [.customLong("product")], help: "Compute path according to 4D product version: /Volumes/ENGINEERING/Products/Compiled/Build/<product>")
     var product: String?
 
-    @Argument(help: "Path of base to test.")
+    @Argument(help: "Path of script to launch the test.\nThe script well receive \n\t- the version to test\n\tthe path of all products\nSo <path>/<version> will contain the product.\n\nThe script must return:\n\t✅ 0 if ok \n\t🌀 125 if no product found to skip\n\t🛑 128 to stop all process\n\t❌ any other code if the test failed")
     var script: String
 
     lazy var versionProvider: VersionProvider =  {
