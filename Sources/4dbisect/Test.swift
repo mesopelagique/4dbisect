@@ -17,8 +17,12 @@ enum Test {
             let code = shell(script, ["\(version)", path ?? ""] + args)
             return BisectResult(code: code)
         case .openBase(let url, let args):
-            print("‼️ Opening base without script is not implemented yet: \(url), \(args)")
-            return .stop // not implemented yet
+            do {
+                return try OpenBase.run(url: url, version: version, path: path, args: args)
+            } catch {
+                print("💥 \(error)")
+                return .stop
+            }
         }
     }
 }

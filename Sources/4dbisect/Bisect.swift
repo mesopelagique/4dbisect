@@ -56,6 +56,9 @@ struct Bisect: ParsableCommand {
                 print("‼️ You must use Main")
             }
             self.finalPath  = "/Volumes/ENGINEERING/Products/Compiled/Build/\(product)"
+            if !FileManager.default.fileExists(atPath: self.finalPath ?? "") {
+                print("‼️ You must specify --path or check if this path exists \( self.finalPath ?? ""), ie. mount srv-4d")
+            }
             return FileProvider(path: "/Volumes/ENGINEERING/Products/Compiled/Build/\(product)")
         }
         // return ListProvider(versions: [50, 78, 466, 799, 800])
@@ -85,7 +88,7 @@ struct Bisect: ParsableCommand {
 
         guard let test = self.test else {
             print("‼️ No test to do")
-            Darwin.exit(1)
+            Darwin.exit(BisectResult.stop.code)
         }
    
         var minValue = test.run(version: realMin, path: finalPath)
@@ -101,7 +104,7 @@ struct Bisect: ParsableCommand {
         }
         if minValue == .stop {
             print("🛑 min \(realMin) request to stop")
-            Darwin.exit(128)
+            Darwin.exit(BisectResult.stop.code)
         }
         var maxValue = test.run(version: realMax, path: finalPath)
         print(maxValue.icon)
@@ -116,7 +119,7 @@ struct Bisect: ParsableCommand {
         }
         if maxValue == .stop {
             print("🛑 max \(realMax) request to stop")
-            Darwin.exit(128)
+            Darwin.exit(BisectResult.stop.code)
         }
 
         if realMin == realMax {
